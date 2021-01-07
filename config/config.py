@@ -46,6 +46,7 @@ contactTestResult = 10
 
 
 if __name__ == '__main__':
+    print(ROOT_DIR)
     print(pageElementLocatorPath)
     print(testExcelValuePath)
     print(LOG_DIR)
