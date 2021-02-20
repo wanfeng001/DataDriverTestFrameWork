@@ -40,23 +40,22 @@ log = Logger(__name__, logging.INFO)
 do_excel = ParseExcel()
 sheetName = do_excel.wb.sheetnames  # 获取所有的sheetname 是个列表
 
-
 def test_mail_login():
     """测试用例"""
-    driver = webdriver.Firefox()
+    driver = webdriver.Chrome()
     base = Base(driver)
     base.open_url()
     login_action = LoginAction(driver)
     add_contact = NewAction(driver)
     # 是否执行列数据
-    is_execute = do_excel.get_column_value(sheetName[0], accountIsExecute)
-    data_book = do_excel.get_column_value(sheetName[0], accountDataBook)
-    for idx, value in enumerate(is_execute[:]):
+    is_execute = do_excel.get_column_value(sheetName[0], accountIsExecute) #  5
+    data_book = do_excel.get_column_value(sheetName[0], accountDataBook) #  4
+    for idx, value in enumerate(is_execute[:]):  #  (0,y) (1,y)
         # print(idx, value) # 获取是否执行列数据列表的索引和数据
         if value.lower() == 'y':
-            user_row_value = do_excel.get_row_value(sheetName[0], idx + 2)  # 获取执行状态为y所在行的数据
-            user_name = user_row_value[accountUserName - 2]
-            pass_word = user_row_value[accountPassWord - 2]
+            user_row_value = do_excel.get_row_value(sheetName[0], idx + 2)  # 获取执行状态为y所在行的数据 # 2,3
+            user_name = user_row_value[accountUserName - 2] # user_row_value[0]
+            pass_word = user_row_value[accountPassWord - 2] # user_row_value[1]
             # 登录
             login_action.click_password_login()
             login_action.login(user_name, pass_word)
@@ -66,12 +65,12 @@ def test_mail_login():
             except Exception:
                 base.save_screen_shot(user_name + '-' + pass_word + '失败')
                 log.logger.info('登录失败,输出信息如下：{}'.format(traceback.format_exc()))
-                do_excel.write_cell(sheetName[0], idx + 2, accountTestResult, 'failed')
+                do_excel.write_cell(sheetName[0], idx + 2, accountTestResult, 'failed') # (6,2)
                 base.delete_cookies()
                 base.open_url()
             else:
                 log.logger.info('账号：{}登录成功, 测试通过'.format(user_name))
-                do_excel.write_cell(sheetName[0], idx + 2, accountTestResult, 'pass')
+                do_excel.write_cell(sheetName[0], idx + 2, accountTestResult, 'pass') # (6,2)
                 # 获取联系人数据表中是否执行列的数据
                 if data_book[idx] == sheetName[1]:
                     is_execute = do_excel.get_column_value(sheetName[1], contactIsExecute)
@@ -126,3 +125,4 @@ def test_mail_login():
 
 if __name__ == '__main__':
     pass
+

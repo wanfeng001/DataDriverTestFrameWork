@@ -9,9 +9,10 @@
 @GROUP: 878565760
 ------------------------------------
 """
+from selenium import webdriver
+
 from pages.base import Base
 from util.ParseConfig import ParseConfigFile as DoConf
-
 
 class HomePage(Base):
 
